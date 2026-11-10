@@ -3,9 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
 
-  workers: 1,
+  workers: 3,
   timeout: 60 * 1000,
-  fullyParallel: false,
+  fullyParallel: true,
   reporter: [['html'], ['list']],
   use: {
      headless:false,
@@ -18,14 +18,13 @@ export default defineConfig({
       name: 'setup',
       testDir: '.',
       testMatch: 'auth.setup.ts',
-      // use:{...devices['Desktop Firefox']}
     },
-    {
-      name: 'login-tests',
-      testDir: './tests',
-      testMatch: 'login.spec.ts',
-      use: { ...devices['Desktop Chrome'] }
-    },
+    // {
+    //   name: 'login-tests',
+    //   testDir: './tests',
+    //   testMatch: 'login.spec.ts',
+    //   use: { ...devices['Desktop Chrome'] }
+    // },
     {
       name: 'Chrome',
       testDir: './tests',
@@ -36,6 +35,29 @@ export default defineConfig({
          storageState: 'playwright/.auth/user.json'
       },
       dependencies: ['setup']
+    },
+     {
+      name: 'firefox',
+      testDir: './tests',
+      // testMatch: /pim\.spec\.ts|network\.spec\.ts/,
+      testIgnore: 'login.spec.ts',
+      use: {
+        ...devices['Desktop Firefox'],
+         storageState: 'playwright/.auth/user.json'
+      },
+      dependencies: ['setup']
+    },
+     {
+      name: 'Webkit',
+      testDir: './tests',
+      // testMatch: /pim\.spec\.ts|network\.spec\.ts/,
+      testIgnore: 'login.spec.ts',
+      use: {
+        ...devices['Desktop Webkit'],
+         storageState: 'playwright/.auth/user.json'
+      },
+      dependencies: ['setup']
     }
+
   ]
 });
